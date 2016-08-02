@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/code-n-beer/ansible-docker.svg?branch=master)](https://travis-ci.org/code-n-beer/ansible-docker)
 # ansible-docker
 
 Yet another role for installing Docker. So far only on Debian.
