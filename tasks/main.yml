@@ -1,0 +1,52 @@
+---
+- name: Ensure dependencies are installed
+  apt: name={{ item }} state=present autoremove=no
+  with_items:
+    - apt-transport-https
+    - python-setuptools
+
+- name: Install Docker apt-key
+  apt_key: keyserver={{ docker_primary_apt_key_server }} id={{ docker_apt_key_id }}
+  register: docker_primary_apt_key_fetch
+  ignore_errors: yes
+
+- name: Install Docker apt-key from a secondary source
+  apt_key: keyserver={{ docker_secondary_apt_key_server }} id={{ docker_apt_key_id }}
+  when: docker_primary_apt_key_fetch|failed
+
+- name: Ensure docker apt repository is in sources
+  apt_repository: repo={{ docker_apt_repository }} state=present
+
+- name: Update apt repositories
+  apt: update_cache=yes
+
+- name: Verify apt is pulling from the right repository
+  command: apt-cache policy docker-engine
+  changed_when: false
+
+- name: Check if Docker is installed
+  shell: docker version
+  register: docker_installed
+  ignore_errors: true
+  changed_when: false
+
+- name: Install Docker engine
+  apt: name=docker-engine state=present autoremove=no
+
+- name: Ensure python-pip is installed
+  easy_install: name=pip state=present
+
+- name: Ensure virtualenv is installed
+  pip: name=virtualenv state=present 
+
+- name: Ensure docker-py is installed
+  pip: name=docker-py state=present
+
+- name: ensure docker service is running
+  service: name=docker state=started enabled=yes
+
+- name: add users to docker group
+  user: name={{ item }} groups=docker append=yes
+  with_items: "{{ docker_users }}"
+  when: docker_users is defined
+  ignore_errors: true

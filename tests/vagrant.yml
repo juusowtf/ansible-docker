@@ -1,0 +1,6 @@
+---
+- hosts: vagrant
+  become: yes
+  become_user: root
+  roles:
+    - { role: ansible-docker, docker_users: vagrant }
