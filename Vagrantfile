@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-boxes = [ { name: "debian", image: "debian/jessie64", private_ip: "192.168.33.55" } ]
+boxes = [ { name: "debian-jessie", image: "debian/jessie64", private_ip: "192.168.33.55" } ]
 
 Vagrant.configure(2) do |config|
 

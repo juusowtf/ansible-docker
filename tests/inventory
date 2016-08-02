@@ -1,5 +1,5 @@
 [vagrant-debian]
-192.168.33.55
+vagrant-debian-jessie ansible_host=192.168.33.55
 
 [vagrant:children]
 vagrant-debian
